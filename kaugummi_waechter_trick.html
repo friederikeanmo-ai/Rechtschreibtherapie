@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Kaugummi-Wächter-Trick · Doppelkonsonanten</title>
+<style>
+  * { box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
+  body {
+    margin:0; padding:16px; min-height:100vh;
+    background:linear-gradient(145deg,#1a3a5f,#0e2a3a);
+    font-family:'Segoe UI',system-ui,sans-serif;
+    display:flex; justify-content:center;
+  }
+  .app { max-width:720px; width:100%; background:#fef7e8; border-radius:40px; padding:1.4rem 1.6rem 1.8rem; box-shadow:0 20px 40px rgba(0,0,0,.5); text-align:center; }
+  h1 { color:#b45f1b; font-size:1.3rem; margin:0 0 .3rem; }
+  .sub { color:#7a5a2e; font-size:.85rem; margin-bottom:1rem; }
+  .storybox { background:#e3f0ff; border-left:4px solid #2a7ae2; border-radius:10px; padding:.7rem 1rem; font-size:.82rem; color:#1a3a5f; text-align:left; margin-bottom:1.2rem; }
+  .stepLabel { font-size:.78rem; font-weight:bold; color:#5fa7f0; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+  .wordcard { background:#f2e5c2; border:3px solid #ffcf8a; border-radius:32px; padding:30px 20px; margin-bottom:18px; }
+  .word { font-size:2.6rem; font-weight:800; letter-spacing:1px; color:#2c2b1a; line-height:1; }
+  .vowel { color:#c0392b; display:inline-block; transition:transform .35s ease; cursor:pointer; }
+  .vowel.stretched { transform: scaleX(2.6); }
+  .blank {
+    display:inline-block; vertical-align:baseline; line-height:1;
+    color:#8b5a2b; font-weight:900;
+    border:3px dashed #c98a3a; border-radius:10px;
+    min-width:22px; min-height:0.85em;
+    padding:2px 6px 0; margin:0 2px;
+  }
+  .blank.filled { color:#2c2b1a; border-style:solid; border-color:#8fbf6b; min-width:0; }
+  .consHint {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#e8eef7; border:2px solid #9fb4d8; border-radius:14px;
+    padding:6px 14px; font-size:.85rem; color:#2a4a7a; margin-top:10px;
+  }
+  .consHint b { font-size:1.1rem; color:#1a3a5f; }
+  .gumhint { font-size:.75rem; color:#8b5a2b; margin-top:8px; }
+  .btnrow { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:14px; }
+  .choice {
+    flex:1; min-width:150px; border:none; border-radius:24px; padding:14px 10px; font-weight:bold; font-size:.95rem;
+    cursor:pointer; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.25);
+  }
+  .choice.long { background:#2a9d8f; }
+  .choice.short { background:#e2703a; }
+  .choice.single { background:#5fa7f0; }
+  .choice.double { background:#8a5fd6; }
+  .choice:active { transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.25); }
+  .choice:disabled { opacity:.4; cursor:default; }
+  .choice:disabled:active { transform:none; box-shadow:0 4px 0 rgba(0,0,0,.25); }
+  .feedback { min-height:2.4rem; font-weight:bold; border-radius:24px; padding:10px 16px; margin-bottom:14px; font-size:.95rem; }
+  .feedback.ok { background:#d7f0cd; color:#2c5a2e; }
+  .feedback.err { background:#ffd3c2; color:#b33a1a; }
+  .feedback.idle { background:#fae8c0; color:#b64926; }
+  .guards { font-size:1.8rem; margin:4px 0 10px; min-height:2.2rem; }
+  .step2 { margin-top:6px; padding-top:14px; border-top:2px dashed #d8c091; }
+  .step2.hidden { display:none; }
+  .footer { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .stars { font-size:.85rem; color:#8b5a2b; }
+  button.next { border:none; background:#5fa7f0; color:#fff; padding:9px 22px; border-radius:30px; font-weight:bold; cursor:pointer; box-shadow:0 4px 0 #2c5282; }
+  button.next:disabled { opacity:.4; cursor:default; }
+  button.reset { border:none; background:#999; color:#fff; padding:7px 16px; border-radius:30px; font-weight:bold; cursor:pointer; font-size:.75rem; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🍬🐕 Der Kaugummi-Wächter-Trick</h1>
+  <div class="sub">Braucht das Wort einen doppelten Wächter (Doppelkonsonant) oder reicht einer?</div>
+  <div class="storybox">
+    <strong>So geht's:</strong> 1) Tippe auf den roten Vokal – zieh ihn wie Kaugummi. Klingt er noch normal gedehnt ("raaaaten"), ist er <strong>lang</strong>. Klingt es albern/abgehackt ("ba-a-a-cken"), ist er <strong>kurz</strong>.
+    2) Erst dann entscheidest du: Braucht die Silben-Tür <strong>einen</strong> oder <strong>zwei Wächter</strong>?
+  </div>
+
+  <div class="wordcard">
+    <div class="stepLabel" id="stepLabel">Schritt 1: Vokal dehnen</div>
+    <div class="word" id="wordDisplay"></div>
+    <div class="consHint" id="consHint" style="display:none;">Gesuchter Wächter: <b id="consLetter"></b></div>
+    <div class="gumhint" id="hint">👆 Vokal antippen zum Dehnen · leerer Kasten = Wächter-Anzahl noch offen</div>
+  </div>
+
+  <div id="step1">
+    <div class="btnrow">
+      <button class="choice long" id="btnLong">🍬 Lang &amp; dehnbar</button>
+      <button class="choice short" id="btnShort">⚡ Kurz &amp; abgehackt</button>
+    </div>
+  </div>
+
+  <div class="feedback idle" id="feedback1">Los geht's – dehn den Vokal und entscheide dich!</div>
+
+  <div id="step2" class="step2 hidden">
+    <div class="stepLabel">Schritt 2: Wächter wählen</div>
+    <div class="btnrow">
+      <button class="choice single" id="btnSingle"></button>
+      <button class="choice double" id="btnDouble"></button>
+    </div>
+    <div class="guards" id="guards"></div>
+    <div class="feedback idle" id="feedback2"></div>
+  </div>
+
+  <div class="footer">
+    <button class="reset" id="resetBtn">↺ Fortschritt löschen</button>
+    <div class="stars" id="stars"></div>
+    <button class="next" id="nextBtn" disabled>⏩ Nächstes Wort</button>
+  </div>
+</div>
+
+<script>
+// Each word is split so the consonant count is NEVER visible until step 2:
+// prefix + vowel + [hidden guard consonant(s)] + suffix
+const WORDS = [
+  { word:"Bett", prefix:"B", vowel:"e", cons:"t", suffix:"", isShort:true, double:null },
+  { word:"Mutter", prefix:"M", vowel:"u", cons:"t", suffix:"er", isShort:true, double:null },
+  { word:"Matte", prefix:"M", vowel:"a", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Ratte", prefix:"R", vowel:"a", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Watte", prefix:"W", vowel:"a", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Kette", prefix:"K", vowel:"e", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Mitte", prefix:"M", vowel:"i", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"bitten", prefix:"b", vowel:"i", cons:"t", suffix:"en", isShort:true, double:null },
+  { word:"Butter", prefix:"B", vowel:"u", cons:"t", suffix:"er", isShort:true, double:null },
+  { word:"retten", prefix:"r", vowel:"e", cons:"t", suffix:"en", isShort:true, double:null },
+  { word:"Otter", prefix:"", vowel:"O", cons:"t", suffix:"er", isShort:true, double:null },
+  { word:"Platte", prefix:"Pl", vowel:"a", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Hütte", prefix:"H", vowel:"ü", cons:"t", suffix:"e", isShort:true, double:null },
+  { word:"Blatt", prefix:"Bl", vowel:"a", cons:"t", suffix:"", isShort:true, double:null },
+  { word:"Schritt", prefix:"Schr", vowel:"i", cons:"t", suffix:"", isShort:true, double:null },
+  { word:"beten", prefix:"b", vowel:"e", cons:"t", suffix:"en", isShort:false, double:null },
+  { word:"bieten", prefix:"b", vowel:"ie", cons:"t", suffix:"en", isShort:false, double:null },
+  { word:"Miete", prefix:"M", vowel:"ie", cons:"t", suffix:"e", isShort:false, double:null },
+  { word:"hüten", prefix:"h", vowel:"ü", cons:"t", suffix:"en", isShort:false, double:null },
+  { word:"Note", prefix:"N", vowel:"o", cons:"t", suffix:"e", isShort:false, double:null },
+  { word:"Rate", prefix:"R", vowel:"a", cons:"t", suffix:"e", isShort:false, double:null },
+  { word:"raten", prefix:"r", vowel:"a", cons:"t", suffix:"en", isShort:false, double:null },
+  { word:"Seite", prefix:"S", vowel:"ei", cons:"t", suffix:"e", isShort:false, double:null },
+  { word:"Leiter", prefix:"L", vowel:"ei", cons:"t", suffix:"er", isShort:false, double:null },
+  { word:"rennen", prefix:"r", vowel:"e", cons:"n", suffix:"en", isShort:true, double:null },
+  { word:"kennen", prefix:"k", vowel:"e", cons:"n", suffix:"en", isShort:true, double:null },
+  { word:"Sonne", prefix:"S", vowel:"o", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"Tonne", prefix:"T", vowel:"o", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"Kanne", prefix:"K", vowel:"a", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"Panne", prefix:"P", vowel:"a", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"dünn", prefix:"d", vowel:"ü", cons:"n", suffix:"", isShort:true, double:null },
+  { word:"Mann", prefix:"M", vowel:"a", cons:"n", suffix:"", isShort:true, double:null },
+  { word:"Pfanne", prefix:"Pf", vowel:"a", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"spinnen", prefix:"sp", vowel:"i", cons:"n", suffix:"en", isShort:true, double:null },
+  { word:"Tanne", prefix:"T", vowel:"a", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"nennen", prefix:"n", vowel:"e", cons:"n", suffix:"en", isShort:true, double:null },
+  { word:"brennen", prefix:"br", vowel:"e", cons:"n", suffix:"en", isShort:true, double:null },
+  { word:"Wanne", prefix:"W", vowel:"a", cons:"n", suffix:"e", isShort:true, double:null },
+  { word:"Bienen", prefix:"B", vowel:"ie", cons:"n", suffix:"en", isShort:false, double:null },
+  { word:"Mine", prefix:"M", vowel:"i", cons:"n", suffix:"e", isShort:false, double:null },
+  { word:"Biene", prefix:"B", vowel:"ie", cons:"n", suffix:"e", isShort:false, double:null },
+  { word:"grünen", prefix:"gr", vowel:"ü", cons:"n", suffix:"en", isShort:false, double:null },
+  { word:"dienen", prefix:"d", vowel:"ie", cons:"n", suffix:"en", isShort:false, double:null },
+  { word:"Miene", prefix:"M", vowel:"ie", cons:"n", suffix:"e", isShort:false, double:null },
+  { word:"Krone", prefix:"Kr", vowel:"o", cons:"n", suffix:"e", isShort:false, double:null },
+  { word:"reine", prefix:"r", vowel:"ei", cons:"n", suffix:"e", isShort:false, double:null },
+  { word:"kommen", prefix:"k", vowel:"o", cons:"m", suffix:"en", isShort:true, double:null },
+  { word:"Sommer", prefix:"S", vowel:"o", cons:"m", suffix:"er", isShort:true, double:null },
+  { word:"Zimmer", prefix:"Z", vowel:"i", cons:"m", suffix:"er", isShort:true, double:null },
+  { word:"Hammer", prefix:"H", vowel:"a", cons:"m", suffix:"er", isShort:true, double:null },
+  { word:"Kamm", prefix:"K", vowel:"a", cons:"m", suffix:"", isShort:true, double:null },
+  { word:"Damm", prefix:"D", vowel:"a", cons:"m", suffix:"", isShort:true, double:null },
+  { word:"schwimmen", prefix:"schw", vowel:"i", cons:"m", suffix:"en", isShort:true, double:null },
+  { word:"klemmen", prefix:"kl", vowel:"e", cons:"m", suffix:"en", isShort:true, double:null },
+  { word:"stimmen", prefix:"st", vowel:"i", cons:"m", suffix:"en", isShort:true, double:null },
+  { word:"krumm", prefix:"kr", vowel:"u", cons:"m", suffix:"", isShort:true, double:null },
+  { word:"Lamm", prefix:"L", vowel:"a", cons:"m", suffix:"", isShort:true, double:null },
+  { word:"Nummer", prefix:"N", vowel:"u", cons:"m", suffix:"er", isShort:true, double:null },
+  { word:"klimmen", prefix:"kl", vowel:"i", cons:"m", suffix:"en", isShort:true, double:null },
+  { word:"Dame", prefix:"D", vowel:"a", cons:"m", suffix:"e", isShort:false, double:null },
+  { word:"Blume", prefix:"Bl", vowel:"u", cons:"m", suffix:"e", isShort:false, double:null },
+  { word:"Same", prefix:"S", vowel:"a", cons:"m", suffix:"e", isShort:false, double:null },
+  { word:"Ball", prefix:"B", vowel:"a", cons:"l", suffix:"", isShort:true, double:null },
+  { word:"Fall", prefix:"F", vowel:"a", cons:"l", suffix:"", isShort:true, double:null },
+  { word:"Halle", prefix:"H", vowel:"a", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Falle", prefix:"F", vowel:"a", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Welle", prefix:"W", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Stelle", prefix:"St", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"schnell", prefix:"schn", vowel:"e", cons:"l", suffix:"", isShort:true, double:null },
+  { word:"Zelle", prefix:"Z", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"wollen", prefix:"w", vowel:"o", cons:"l", suffix:"en", isShort:true, double:null },
+  { word:"sollen", prefix:"s", vowel:"o", cons:"l", suffix:"en", isShort:true, double:null },
+  { word:"voll", prefix:"v", vowel:"o", cons:"l", suffix:"", isShort:true, double:null },
+  { word:"Rolle", prefix:"R", vowel:"o", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Kelle", prefix:"K", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Delle", prefix:"D", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Quelle", prefix:"Qu", vowel:"e", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"Wall", prefix:"W", vowel:"a", cons:"l", suffix:"", isShort:true, double:null },
+  { word:"Kralle", prefix:"Kr", vowel:"a", cons:"l", suffix:"e", isShort:true, double:null },
+  { word:"malen", prefix:"m", vowel:"a", cons:"l", suffix:"en", isShort:false, double:null },
+  { word:"holen", prefix:"h", vowel:"o", cons:"l", suffix:"en", isShort:false, double:null },
+  { word:"spielen", prefix:"sp", vowel:"ie", cons:"l", suffix:"en", isShort:false, double:null },
+  { word:"Öl", prefix:"", vowel:"Ö", cons:"l", suffix:"", isShort:false, double:null },
+  { word:"Wal", prefix:"W", vowel:"a", cons:"l", suffix:"", isShort:false, double:null },
+  { word:"Mal", prefix:"M", vowel:"a", cons:"l", suffix:"", isShort:false, double:null },
+  { word:"Schale", prefix:"Sch", vowel:"a", cons:"l", suffix:"e", isShort:false, double:null },
+  { word:"Wasser", prefix:"W", vowel:"a", cons:"s", suffix:"er", isShort:true, double:null },
+  { word:"Kissen", prefix:"K", vowel:"i", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"Nuss", prefix:"N", vowel:"u", cons:"s", suffix:"", isShort:true, double:null },
+  { word:"Fluss", prefix:"Fl", vowel:"u", cons:"s", suffix:"", isShort:true, double:null },
+  { word:"Kasse", prefix:"K", vowel:"a", cons:"s", suffix:"e", isShort:true, double:null },
+  { word:"Tasse", prefix:"T", vowel:"a", cons:"s", suffix:"e", isShort:true, double:null },
+  { word:"Masse", prefix:"M", vowel:"a", cons:"s", suffix:"e", isShort:true, double:null },
+  { word:"Klasse", prefix:"Kl", vowel:"a", cons:"s", suffix:"e", isShort:true, double:null },
+  { word:"essen", prefix:"", vowel:"e", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"müssen", prefix:"m", vowel:"ü", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"lassen", prefix:"l", vowel:"a", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"wissen", prefix:"w", vowel:"i", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"küssen", prefix:"k", vowel:"ü", cons:"s", suffix:"en", isShort:true, double:null },
+  { word:"Kuss", prefix:"K", vowel:"u", cons:"s", suffix:"", isShort:true, double:null },
+  { word:"Nüsse", prefix:"N", vowel:"ü", cons:"s", suffix:"e", isShort:true, double:null },
+  { word:"Hase", prefix:"H", vowel:"a", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Rose", prefix:"R", vowel:"o", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Nase", prefix:"N", vowel:"a", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"lesen", prefix:"l", vowel:"e", cons:"s", suffix:"en", isShort:false, double:null },
+  { word:"Wiese", prefix:"W", vowel:"ie", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Riese", prefix:"R", vowel:"ie", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Reise", prefix:"R", vowel:"ei", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Käse", prefix:"K", vowel:"ä", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"lösen", prefix:"l", vowel:"ö", cons:"s", suffix:"en", isShort:false, double:null },
+  { word:"Vase", prefix:"V", vowel:"a", cons:"s", suffix:"e", isShort:false, double:null },
+  { word:"Kappe", prefix:"K", vowel:"a", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Suppe", prefix:"S", vowel:"u", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Treppe", prefix:"Tr", vowel:"e", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Puppe", prefix:"P", vowel:"u", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"klappen", prefix:"kl", vowel:"a", cons:"p", suffix:"en", isShort:true, double:null },
+  { word:"knapp", prefix:"kn", vowel:"a", cons:"p", suffix:"", isShort:true, double:null },
+  { word:"Mappe", prefix:"M", vowel:"a", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Lippe", prefix:"L", vowel:"i", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"stoppen", prefix:"st", vowel:"o", cons:"p", suffix:"en", isShort:true, double:null },
+  { word:"Pappe", prefix:"P", vowel:"a", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Krippe", prefix:"Kr", vowel:"i", cons:"p", suffix:"e", isShort:true, double:null },
+  { word:"Lupe", prefix:"L", vowel:"u", cons:"p", suffix:"e", isShort:false, double:null },
+  { word:"Raupe", prefix:"R", vowel:"au", cons:"p", suffix:"e", isShort:false, double:null },
+  { word:"offen", prefix:"", vowel:"o", cons:"f", suffix:"en", isShort:true, double:null },
+  { word:"Affe", prefix:"", vowel:"A", cons:"f", suffix:"e", isShort:true, double:null },
+  { word:"Schiff", prefix:"Sch", vowel:"i", cons:"f", suffix:"", isShort:true, double:null },
+  { word:"treffen", prefix:"tr", vowel:"e", cons:"f", suffix:"en", isShort:true, double:null },
+  { word:"öffnen", prefix:"", vowel:"ö", cons:"f", suffix:"nen", isShort:true, double:null },
+  { word:"Stoff", prefix:"St", vowel:"o", cons:"f", suffix:"", isShort:true, double:null },
+  { word:"Waffe", prefix:"W", vowel:"a", cons:"f", suffix:"e", isShort:true, double:null },
+  { word:"hoffen", prefix:"h", vowel:"o", cons:"f", suffix:"en", isShort:true, double:null },
+  { word:"Löffel", prefix:"L", vowel:"ö", cons:"f", suffix:"el", isShort:true, double:null },
+  { word:"Affen", prefix:"", vowel:"A", cons:"f", suffix:"en", isShort:true, double:null },
+  { word:"rufen", prefix:"r", vowel:"u", cons:"f", suffix:"en", isShort:false, double:null },
+  { word:"Ofen", prefix:"", vowel:"O", cons:"f", suffix:"en", isShort:false, double:null },
+  { word:"laufen", prefix:"l", vowel:"au", cons:"f", suffix:"en", isShort:false, double:null },
+  { word:"Hafen", prefix:"H", vowel:"a", cons:"f", suffix:"en", isShort:false, double:null },
+  { word:"schlafen", prefix:"schl", vowel:"a", cons:"f", suffix:"en", isShort:false, double:null },
+  { word:"Käfer", prefix:"K", vowel:"ä", cons:"f", suffix:"er", isShort:false, double:null },
+  { word:"Tafel", prefix:"T", vowel:"a", cons:"f", suffix:"el", isShort:false, double:null },
+  { word:"Herr", prefix:"H", vowel:"e", cons:"r", suffix:"", isShort:true, double:null },
+  { word:"Narr", prefix:"N", vowel:"a", cons:"r", suffix:"", isShort:true, double:null },
+  { word:"irre", prefix:"", vowel:"i", cons:"r", suffix:"e", isShort:true, double:null },
+  { word:"Karre", prefix:"K", vowel:"a", cons:"r", suffix:"e", isShort:true, double:null },
+  { word:"knurren", prefix:"kn", vowel:"u", cons:"r", suffix:"en", isShort:true, double:null },
+  { word:"surren", prefix:"s", vowel:"u", cons:"r", suffix:"en", isShort:true, double:null },
+  { word:"Sperre", prefix:"Sp", vowel:"e", cons:"r", suffix:"e", isShort:true, double:null },
+  { word:"starren", prefix:"st", vowel:"a", cons:"r", suffix:"en", isShort:true, double:null },
+  { word:"vier", prefix:"v", vowel:"ie", cons:"r", suffix:"", isShort:false, double:null },
+  { word:"Tor", prefix:"T", vowel:"o", cons:"r", suffix:"", isShort:false, double:null },
+  { word:"Tier", prefix:"T", vowel:"ie", cons:"r", suffix:"", isShort:false, double:null },
+  { word:"Bar", prefix:"B", vowel:"a", cons:"r", suffix:"", isShort:false, double:null },
+  { word:"Krabbe", prefix:"Kr", vowel:"a", cons:"b", suffix:"e", isShort:true, double:null },
+  { word:"Robbe", prefix:"R", vowel:"o", cons:"b", suffix:"e", isShort:true, double:null },
+  { word:"Ebbe", prefix:"", vowel:"E", cons:"b", suffix:"e", isShort:true, double:null },
+  { word:"sieben", prefix:"s", vowel:"ie", cons:"b", suffix:"en", isShort:false, double:null },
+  { word:"üben", prefix:"", vowel:"ü", cons:"b", suffix:"en", isShort:false, double:null },
+  { word:"loben", prefix:"l", vowel:"o", cons:"b", suffix:"en", isShort:false, double:null },
+  { word:"graben", prefix:"gr", vowel:"a", cons:"b", suffix:"en", isShort:false, double:null },
+  { word:"Nadel", prefix:"N", vowel:"a", cons:"d", suffix:"el", isShort:false, double:null },
+  { word:"laden", prefix:"l", vowel:"a", cons:"d", suffix:"en", isShort:false, double:null },
+  { word:"Faden", prefix:"F", vowel:"a", cons:"d", suffix:"en", isShort:false, double:null },
+  { word:"baden", prefix:"b", vowel:"a", cons:"d", suffix:"en", isShort:false, double:null },
+  { word:"reden", prefix:"r", vowel:"e", cons:"d", suffix:"en", isShort:false, double:null },
+  { word:"Feder", prefix:"F", vowel:"e", cons:"d", suffix:"er", isShort:false, double:null },
+  { word:"Boden", prefix:"B", vowel:"o", cons:"d", suffix:"en", isShort:false, double:null },
+  { word:"Flagge", prefix:"Fl", vowel:"a", cons:"g", suffix:"e", isShort:true, double:null },
+  { word:"Roggen", prefix:"R", vowel:"o", cons:"g", suffix:"en", isShort:true, double:null },
+  { word:"Dogge", prefix:"D", vowel:"o", cons:"g", suffix:"e", isShort:true, double:null },
+  { word:"Bagger", prefix:"B", vowel:"a", cons:"g", suffix:"er", isShort:true, double:null },
+  { word:"fragen", prefix:"fr", vowel:"a", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"tragen", prefix:"tr", vowel:"a", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"sagen", prefix:"s", vowel:"a", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"Wagen", prefix:"W", vowel:"a", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"liegen", prefix:"l", vowel:"ie", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"fliegen", prefix:"fl", vowel:"ie", cons:"g", suffix:"en", isShort:false, double:null },
+  { word:"Vogel", prefix:"V", vowel:"o", cons:"g", suffix:"el", isShort:false, double:null },
+  { word:"Segel", prefix:"S", vowel:"e", cons:"g", suffix:"el", isShort:false, double:null },
+  { word:"Wiege", prefix:"W", vowel:"ie", cons:"g", suffix:"e", isShort:false, double:null },
+  { word:"Igel", prefix:"", vowel:"I", cons:"g", suffix:"el", isShort:false, double:null },
+  { word:"backen", prefix:"b", vowel:"a", cons:"k", suffix:"en", isShort:true, double:"ck" },
+  { word:"Zucker", prefix:"Z", vowel:"u", cons:"k", suffix:"er", isShort:true, double:"ck" },
+  { word:"Rock", prefix:"R", vowel:"o", cons:"k", suffix:"", isShort:true, double:"ck" },
+  { word:"Glück", prefix:"Gl", vowel:"ü", cons:"k", suffix:"", isShort:true, double:"ck" },
+  { word:"dick", prefix:"d", vowel:"i", cons:"k", suffix:"", isShort:true, double:"ck" },
+  { word:"Ecke", prefix:"", vowel:"E", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Socke", prefix:"S", vowel:"o", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Decke", prefix:"D", vowel:"e", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Lücke", prefix:"L", vowel:"ü", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Brücke", prefix:"Br", vowel:"ü", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Schnecke", prefix:"Schn", vowel:"e", cons:"k", suffix:"e", isShort:true, double:"ck" },
+  { word:"Wecker", prefix:"W", vowel:"e", cons:"k", suffix:"er", isShort:true, double:"ck" },
+  { word:"Nacken", prefix:"N", vowel:"a", cons:"k", suffix:"en", isShort:true, double:"ck" },
+  { word:"Haken", prefix:"H", vowel:"a", cons:"k", suffix:"en", isShort:false, double:null },
+  { word:"Laken", prefix:"L", vowel:"a", cons:"k", suffix:"en", isShort:false, double:null },
+  { word:"sitzen", prefix:"s", vowel:"i", cons:"z", suffix:"en", isShort:true, double:"tz" },
+  { word:"Katze", prefix:"K", vowel:"a", cons:"z", suffix:"e", isShort:true, double:"tz" },
+  { word:"Mütze", prefix:"M", vowel:"ü", cons:"z", suffix:"e", isShort:true, double:"tz" },
+  { word:"Blitz", prefix:"Bl", vowel:"i", cons:"z", suffix:"", isShort:true, double:"tz" },
+  { word:"Netz", prefix:"N", vowel:"e", cons:"z", suffix:"", isShort:true, double:"tz" },
+  { word:"Platz", prefix:"Pl", vowel:"a", cons:"z", suffix:"", isShort:true, double:"tz" },
+  { word:"setzen", prefix:"s", vowel:"e", cons:"z", suffix:"en", isShort:true, double:"tz" },
+  { word:"putzen", prefix:"p", vowel:"u", cons:"z", suffix:"en", isShort:true, double:"tz" },
+  { word:"Witz", prefix:"W", vowel:"i", cons:"z", suffix:"", isShort:true, double:"tz" },
+  { word:"kratzen", prefix:"kr", vowel:"a", cons:"z", suffix:"en", isShort:true, double:"tz" },
+  { word:"Pfütze", prefix:"Pf", vowel:"ü", cons:"z", suffix:"e", isShort:true, double:"tz" }
+];
+
+const STORAGE_KEY = "kaugummi_waechter_v2";
+let order = shuffle([...Array(WORDS.length).keys()]);
+let pos = 0;
+let vowelChoiceShort = null; // null = not answered yet
+let consAnswered = false;
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function loadProgress(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
+function saveProgress(p){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch(e){ /* storage unavailable, ignore */ } }
+function markSolved(word){ try { const p = loadProgress(); p[word]=true; saveProgress(p); updateStars(); } catch(e){ /* never let progress-tracking break the flow */ } }
+function updateStars(){
+  const p = loadProgress();
+  const n = Object.keys(p).length;
+  document.getElementById("stars").textContent = `⭐ ${n} / ${WORDS.length} Wörter gemeistert`;
+}
+
+function currentWord(){ return WORDS[order[pos]]; }
+
+function renderWord(){
+  const w = currentWord();
+  vowelChoiceShort = null;
+  consAnswered = false;
+
+  // Word display: prefix + stretchable vowel + neutral blank + suffix
+  const disp = document.getElementById("wordDisplay");
+  disp.innerHTML = "";
+  disp.appendChild(document.createTextNode(w.prefix));
+  const vSpan = document.createElement("span");
+  vSpan.className = "vowel";
+  vSpan.textContent = w.vowel;
+  vSpan.onclick = ()=> vSpan.classList.toggle("stretched");
+  disp.appendChild(vSpan);
+  const blank = document.createElement("span");
+  blank.className = "blank";
+  blank.id = "blankSpan";
+  blank.textContent = "";
+  disp.appendChild(blank);
+  disp.appendChild(document.createTextNode(w.suffix));
+
+  const consHint = document.getElementById("consHint");
+  consHint.style.display = "inline-flex";
+  document.getElementById("consLetter").textContent = w.cons;
+
+  document.getElementById("stepLabel").textContent = "Schritt 1: Vokal dehnen";
+  document.getElementById("hint").textContent = "👆 Vokal antippen zum Dehnen · leerer Kasten = Wächter-Anzahl noch offen";
+
+  document.getElementById("step1").style.display = "";
+  document.getElementById("btnLong").disabled = false;
+  document.getElementById("btnShort").disabled = false;
+
+  const fb1 = document.getElementById("feedback1");
+  fb1.className = "feedback idle";
+  fb1.textContent = "Dehn den Vokal und entscheide dich: lang oder kurz?";
+
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("guards").textContent = "";
+  document.getElementById("feedback2").textContent = "";
+  document.getElementById("feedback2").className = "feedback idle";
+
+  document.getElementById("nextBtn").disabled = true;
+}
+
+function answerVowel(choseShort){
+  if (vowelChoiceShort !== null) return;
+  vowelChoiceShort = choseShort;
+  const w = currentWord();
+  document.getElementById("btnLong").disabled = true;
+  document.getElementById("btnShort").disabled = true;
+
+  const fb1 = document.getElementById("feedback1");
+  if (choseShort === w.isShort){
+    fb1.className = "feedback ok";
+    fb1.textContent = w.isShort
+      ? `✅ Richtig, der Vokal klingt kurz und abgehackt!`
+      : `✅ Richtig, der Vokal lässt sich lang dehnen!`;
+  } else {
+    fb1.className = "feedback err";
+    fb1.textContent = w.isShort
+      ? `❌ Der Vokal ist eigentlich kurz und abgehackt – hör nochmal genau hin.`
+      : `❌ Der Vokal lässt sich eigentlich lang dehnen – hör nochmal genau hin.`;
+  }
+
+  // Move to step 2: reveal the actual consonant letter(s) as clickable options
+  document.getElementById("stepLabel").textContent = "Schritt 2: Wächter wählen";
+  const single = w.cons;
+  const double = w.double || (w.cons + w.cons);
+  const bSingle = document.getElementById("btnSingle");
+  const bDouble = document.getElementById("btnDouble");
+  bSingle.textContent = `🍬 ${single}  (1 Wächter)`;
+  bDouble.textContent = `⚡ ${double}  (2 Wächter)`;
+  bSingle.disabled = false;
+  bDouble.disabled = false;
+  document.getElementById("step2").classList.remove("hidden");
+}
+
+function answerConsonant(choseDouble){
+  if (consAnswered) return;
+  consAnswered = true;
+  const w = currentWord();
+  document.getElementById("btnSingle").disabled = true;
+  document.getElementById("btnDouble").disabled = true;
+
+  // Reveal full word in the blank now
+  const blank = document.getElementById("blankSpan");
+  blank.textContent = w.isShort ? (w.double || (w.cons + w.cons)) : w.cons;
+  blank.classList.add("filled");
+
+  document.getElementById("guards").textContent = w.isShort ? "🐕🐕" : "🐕";
+
+  const consCorrect = (choseDouble === w.isShort);
+  const vowelCorrect = (vowelChoiceShort === w.isShort);
+  const doubleForm = w.double || (w.cons + w.cons);
+
+  const fb2 = document.getElementById("feedback2");
+  if (consCorrect){
+    fb2.className = "feedback ok";
+    fb2.textContent = w.isShort
+      ? `🏆 Genau! "${w.word}" braucht 2 Wächter (${doubleForm}).`
+      : `🏆 Genau! "${w.word}" braucht nur 1 Wächter (${w.cons}).`;
+  } else {
+    fb2.className = "feedback err";
+    fb2.textContent = w.isShort
+      ? `❌ "${w.word}" braucht eigentlich 2 Wächter (${doubleForm}), weil der Vokal kurz ist.`
+      : `❌ "${w.word}" braucht eigentlich nur 1 Wächter (${w.cons}), weil der Vokal lang ist.`;
+  }
+
+  if (vowelCorrect && consCorrect){
+    markSolved(w.word);
+  }
+
+  document.getElementById("nextBtn").disabled = false;
+}
+
+document.getElementById("btnLong").onclick = ()=> answerVowel(false);
+document.getElementById("btnShort").onclick = ()=> answerVowel(true);
+document.getElementById("btnSingle").onclick = ()=> answerConsonant(false);
+document.getElementById("btnDouble").onclick = ()=> answerConsonant(true);
+
+document.getElementById("nextBtn").onclick = ()=>{
+  pos = (pos + 1) % order.length;
+  if (pos === 0) order = shuffle(order);
+  renderWord();
+};
+document.getElementById("resetBtn").onclick = ()=>{
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e){ /* storage unavailable, ignore */ }
+  updateStars();
+};
+
+updateStars();
+renderWord();
+</script>
+</body>
+</html>

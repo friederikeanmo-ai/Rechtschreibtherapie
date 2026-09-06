@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Zufallsgenerator – Abstrakte Nomen</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; }
+    body {
+      background: linear-gradient(145deg, #1a3a5f, #0e2a3a);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', 'Quicksand', system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .game-container {
+      max-width: 1400px;
+      width: 100%;
+      background: #fef7e8;
+      border-radius: 64px;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+      padding: 1.5rem 2rem 2rem;
+    }
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .back-btn {
+      background: #5fa7f0;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #2c5282;
+    }
+    .back-btn:active { transform: translateY(2px); }
+    .title-area {
+      font-size: 1.6rem;
+      font-weight: bold;
+      background: #2c5530;
+      padding: 6px 20px;
+      border-radius: 60px;
+      color: #ffefb9;
+    }
+    .sentence-area {
+      background: #f2e5c2;
+      border-radius: 48px;
+      padding: 24px 20px;
+      margin-bottom: 30px;
+      border: 2px solid #ffcf8a;
+    }
+    .sentence {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px 6px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2c2b1a;
+    }
+    .word-unit {
+      display: inline-flex;
+      align-items: center;
+      background: #fff5e6;
+      padding: 4px 12px;
+      border-radius: 56px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .gap-btn {
+      background: #ffefbf;
+      border: 3px solid #ca9622;
+      border-radius: 48px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      font-family: monospace;
+      min-width: 70px;
+      text-align: center;
+      padding: 4px 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #8b5a2b;
+      color: #2c2b26;
+    }
+    .gap-btn.active {
+      background: #ffeaa0;
+      border-color: #f0a500;
+      box-shadow: 0 0 0 3px #ffdd99, 0 4px 0 #b16217;
+      transform: scale(1.02);
+    }
+    .gap-btn.completed {
+      background: #b5d8a5;
+      border-color: #3f7849;
+      box-shadow: 0 2px 0 #2c5a2e;
+      cursor: default;
+    }
+    .rest-word {
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding: 0 4px;
+      color: #2f3e2e;
+    }
+    .river {
+      background: linear-gradient(135deg, #2c5a3a, #1a3e24);
+      border-radius: 60px;
+      padding: 15px 8px;
+      margin-top: 15px;
+      border: 3px solid #f5c542;
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+    }
+    .river-title {
+      text-align: center;
+      font-weight: bold;
+      color: #fff0a3;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+      background: rgba(0,0,0,0.3);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 18px;
+      border-radius: 60px;
+    }
+    .letter-pool {
+      position: relative;
+      width: 100%;
+      height: 170px;
+    }
+    .floating-card {
+      position: absolute;
+      background: #fff2cf;
+      width: 85px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      font-family: monospace;
+      border-radius: 24px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #8b5a2b;
+      border: 2px solid #ffc285;
+      transition: transform 0.05s linear;
+      will-change: transform, left;
+      z-index: 20;
+    }
+    .floating-card:hover { transform: scale(1.05); background: #ffffe0; }
+    .floating-card:active { transform: scale(0.96); }
+    .flying-card {
+      position: fixed;
+      z-index: 2000;
+      font-size: 2rem;
+      font-weight: bold;
+      background: #ffeaa7;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 20px black;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.25s;
+      opacity: 0.9;
+    }
+    .info-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 25px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .score-box {
+      background: #2d2b1f;
+      padding: 6px 18px;
+      border-radius: 50px;
+      color: #f9e2a1;
+      font-weight: bold;
+    }
+    .message-area {
+      background: #fae8c0;
+      border-radius: 40px;
+      padding: 6px 22px;
+      font-weight: bold;
+      color: #b64926;
+      flex: 1;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    button.next-btn {
+      background: #5fa7f0;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 60px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #2c5282;
+    }
+    button.next-btn:active { transform: translateY(2px); }
+    @media (max-width: 700px) {
+      .gap-btn, .rest-word { font-size: 1.1rem; }
+      .gap-btn { min-width: 60px; }
+      .floating-card { width: 70px; height: 70px; font-size: 1.5rem; }
+      .river { height: 190px; }
+      .sentence { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="game-container">
+  <div class="game-header">
+    <button class="back-btn" onclick="window.location.href='index.html'">← Zurück zur Auswahl</button>
+    <div class="title-area">🎲 Zufallssätze (abstrakte Nomen)</div>
+  </div>
+
+  <div class="sentence-area">
+    <div id="sentenceDisplay" class="sentence"></div>
+  </div>
+
+  <div class="river">
+    <div class="river-title">🌊 Buchstaben‑Fluss (rechts → links)</div>
+    <div id="letterRiver" class="letter-pool"></div>
+  </div>
+
+  <div class="info-panel">
+    <div class="score-box">📖 Satz <span id="satzCounter">1</span> / <span id="totalSätze">∞</span></div>
+    <div id="gameMessage" class="message-area">✨ Klicke eine Lücke an, dann den passenden Buchstaben</div>
+    <button id="nextSentenceBtn" class="next-btn">⏩ Nächster Satz</button>
+  </div>
+</div>
+
+<script>
+  let alleNomen = [];
+  let currentWords = [];
+  let gapsData = [];
+  let activeGapIndex = -1;
+  let floatingElements = [];
+  let msgTimeout = null;
+
+  const sentenceDiv = document.getElementById("sentenceDisplay");
+  const riverContainer = document.getElementById("letterRiver");
+  const satzCounterSpan = document.getElementById("satzCounter");
+  const totalSätzeSpan = document.getElementById("totalSätze");
+  const messageDiv = document.getElementById("gameMessage");
+  const nextBtn = document.getElementById("nextSentenceBtn");
+
+  totalSätzeSpan.innerText = "∞";
+
+  fetch('abstrakte_nomen.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Datei abstrakte_nomen.json nicht gefunden!');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alleNomen = data.alle_nomen || [];
+      if (alleNomen.length === 0) {
+        throw new Error('Keine Nomen in der JSON-Datei gefunden!');
+      }
+      generateRandomSentence();
+    })
+    .catch(error => {
+      messageDiv.innerText = "❌ Fehler: " + error.message + " – Bitte stelle sicher, dass abstrakte_nomen.json im selben Ordner liegt.";
+      messageDiv.style.backgroundColor = "#ffcab3";
+      messageDiv.style.color = "#b33a1a";
+    });
+
+  function randomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function capitalize(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+  function generateRandomSentence() {
+    if (alleNomen.length === 0) return;
+
+    const anzahl = 3 + Math.floor(Math.random() * 3);
+    const ausgewaehlte = [];
+    const kopie = [...alleNomen];
+    for (let i = 0; i < anzahl && kopie.length > 0; i++) {
+      const idx = Math.floor(Math.random() * kopie.length);
+      ausgewaehlte.push(kopie[idx]);
+      kopie.splice(idx, 1);
+    }
+
+    const artikel = ["Der", "Die", "Das", "Mein", "Dein", "Sein", "Ihr", "Unser", "Euer"];
+    const verben = ["ist", "war", "wird", "bleibt", "gilt", "scheint", "wirkt", "zeigt", "bringt", "gibt", "nimmt", "macht"];
+    const adjektive = ["groß", "klein", "wichtig", "gefährlich", "schön", "gut", "böse", "wahr", "falsch", "neu", "alt"];
+    const prae_artikel = ["in", "mit", "auf", "über", "unter", "vor", "hinter", "neben", "zwischen", "ohne", "für"];
+    const prae_nomen = ["Zeit", "Welt", "Leben", "Zukunft", "Vergangenheit", "Gegenwart", "Raum", "Ordnung", "Frieden"];
+
+    const subjekt = randomElement(ausgewaehlte);
+    const verb = randomElement(verben);
+    const adj = randomElement(adjektive);
+    const obj = randomElement(ausgewaehlte.filter(n => n !== subjekt) || ausgewaehlte);
+
+    const muster = [
+      () => `${randomElement(artikel)} ${subjekt} ${verb} ${adj}.`,
+      () => `${randomElement(artikel)} ${subjekt} ${verb} ${randomElement(prae_artikel)} ${randomElement(artikel)} ${obj}.`,
+      () => `${randomElement(artikel)} ${subjekt} ${verb} ${adj} ${randomElement(prae_artikel)} ${randomElement(prae_nomen)}.`,
+      () => `${randomElement(artikel)} ${subjekt} ${verb} ${randomElement(artikel)} ${obj} ${randomElement(prae_artikel)} ${randomElement(prae_nomen)}.`,
+      () => `${randomElement(artikel)} ${subjekt} ${verb} ${randomElement(adjektive)} und ${randomElement(adjektive)}.`
+    ];
+
+    const satzString = capitalize(randomElement(muster)());
+    const wordArray = satzString.split(' ');
+    currentWords = wordArray;
+    renderSentence(currentWords);
+    satzCounterSpan.innerText = "∞";
+  }
+
+  function renderSentence(wordArray) {
+    sentenceDiv.innerHTML = '';
+    gapsData = [];
+
+    wordArray.forEach((word, idx) => {
+      const requiredLetter = word[0];
+      const restWord = word.slice(1);
+      const displayLetter = requiredLetter.toLowerCase();
+
+      const wordUnit = document.createElement('div');
+      wordUnit.className = 'word-unit';
+
+      const gapBtn = document.createElement('button');
+      gapBtn.className = 'gap-btn';
+      gapBtn.innerText = displayLetter;
+      gapBtn.setAttribute('data-word-idx', idx);
+      gapBtn.addEventListener('click', (e) => onGapClick(idx, e));
+      wordUnit.appendChild(gapBtn);
+
+      const restSpan = document.createElement('span');
+      restSpan.className = 'rest-word';
+      restSpan.innerText = restWord;
+      wordUnit.appendChild(restSpan);
+
+      sentenceDiv.appendChild(wordUnit);
+      if (idx !== wordArray.length - 1) {
+        const space = document.createElement('span');
+        space.className = 'rest-word';
+        space.innerText = ' ';
+        sentenceDiv.appendChild(space);
+      }
+
+      gapsData.push({
+        wordIdx: idx,
+        currentDisplay: displayLetter,
+        requiredLetter: requiredLetter,
+        completed: false,
+        remainingWord: restWord
+      });
+    });
+
+    activeGapIndex = -1;
+    updateActiveGap();
+    const riverCards = generateRiverLetters();
+    startRiver(riverCards);
+    nextBtn.style.background = "#5fa7f0";
+  }
+
+  function showMessage(msg, isError = false) {
+    if (msgTimeout) clearTimeout(msgTimeout);
+    messageDiv.innerText = msg;
+    messageDiv.style.backgroundColor = isError ? "#ffcab3" : "#f1e5c0";
+    messageDiv.style.color = isError ? "#b33a1a" : "#2c5a2e";
+    msgTimeout = setTimeout(() => {
+      messageDiv.style.backgroundColor = "#fae8c0";
+      messageDiv.style.color = "#b64926";
+      if (activeGapIndex !== -1 && gapsData[activeGapIndex] && !gapsData[activeGapIndex].completed) {
+        messageDiv.innerText = `🎯 Lücke: '${gapsData[activeGapIndex].currentDisplay}' → benötigt '${gapsData[activeGapIndex].requiredLetter}'`;
+      } else if (!allGapsCompleted()) {
+        messageDiv.innerText = "🐟 Klicke eine Lücke an, dann den passenden Buchstaben";
+      } else {
+        messageDiv.innerText = "✅ Satz gelöst! Weiter mit 'Nächster Satz'";
+      }
+    }, 2500);
+  }
+
+  function allGapsCompleted() {
+    return gapsData.every(g => g.completed === true);
+  }
+
+  function updateActiveGap() {
+    document.querySelectorAll('.gap-btn').forEach(btn => btn.classList.remove('active'));
+    const pendingIdx = gapsData.findIndex(g => !g.completed);
+    if (pendingIdx !== -1) {
+      activeGapIndex = pendingIdx;
+      const btn = document.querySelector(`.gap-btn[data-word-idx="${pendingIdx}"]`);
+      if (btn) btn.classList.add('active');
+      const gap = gapsData[pendingIdx];
+      messageDiv.innerText = `🔍 Lücke: '${gap.currentDisplay}' → benötigt '${gap.requiredLetter}'`;
+    } else {
+      activeGapIndex = -1;
+      if (allGapsCompleted()) messageDiv.innerText = "🎉 Glückwunsch! Satz komplett!";
+    }
+  }
+
+  function onGapClick(gapIdx, e) {
+    if (gapsData[gapIdx].completed) {
+      showMessage("Diese Lücke ist schon richtig!", false);
+      return;
+    }
+    if (activeGapIndex !== -1) {
+      const oldBtn = document.querySelector(`.gap-btn[data-word-idx="${activeGapIndex}"]`);
+      if (oldBtn) oldBtn.classList.remove('active');
+    }
+    activeGapIndex = gapIdx;
+    const newBtn = document.querySelector(`.gap-btn[data-word-idx="${gapIdx}"]`);
+    if (newBtn) newBtn.classList.add('active');
+    const gap = gapsData[gapIdx];
+    showMessage(`✨ Lücke: '${gap.currentDisplay}' → wähle '${gap.requiredLetter}'`, false);
+  }
+
+  function animateAndFill(targetGapBtn, floatingCard, letter, onComplete) {
+    const rectCard = floatingCard.getBoundingClientRect();
+    const rectTarget = targetGapBtn.getBoundingClientRect();
+    const flyer = document.createElement('div');
+    flyer.className = 'flying-card';
+    flyer.innerText = letter;
+    flyer.style.left = rectCard.left + rectCard.width/2 - 35 + 'px';
+    flyer.style.top = rectCard.top + rectCard.height/2 - 35 + 'px';
+    document.body.appendChild(flyer);
+    const deltaX = rectTarget.left + rectTarget.width/2 - 35 - (rectCard.left + rectCard.width/2 - 35);
+    const deltaY = rectTarget.top + rectTarget.height/2 - 35 - (rectCard.top + rectCard.height/2 - 35);
+    flyer.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.6)`;
+    flyer.style.opacity = '0.4';
+    setTimeout(() => {
+      flyer.remove();
+      if (onComplete) onComplete();
+    }, 320);
+  }
+
+  function onFloatingCardClick(letter, element) {
+    if (activeGapIndex === -1) {
+      showMessage("❗ Erst eine Lücke antippen, dann den Buchstaben auswählen!", true);
+      return;
+    }
+    const activeGap = gapsData[activeGapIndex];
+    if (activeGap.completed) {
+      showMessage("Diese Lücke ist schon gefüllt. Wähle eine andere Lücke.", true);
+      return;
+    }
+    const required = activeGap.requiredLetter;
+    if (letter !== required) {
+      showMessage(`❌ Falsch! '${letter}' ist nicht richtig. Versuch's nochmal!`, true);
+      element.style.transform = "scale(0.9)";
+      setTimeout(() => { if (element) element.style.transform = ""; }, 150);
+      return;
+    }
+
+    const targetGapBtn = document.querySelector(`.gap-btn[data-word-idx="${activeGapIndex}"]`);
+    if (!targetGapBtn) return;
+
+    const idx = floatingElements.findIndex(f => f.element === element);
+    if (idx !== -1) {
+      element.remove();
+      floatingElements.splice(idx, 1);
+    }
+
+    animateAndFill(targetGapBtn, element, letter, () => {
+      activeGap.completed = true;
+      const fullWord = letter + activeGap.remainingWord;
+      targetGapBtn.innerText = fullWord;
+      targetGapBtn.classList.remove('active');
+      targetGapBtn.classList.add('completed');
+      updateActiveGap();
+      if (allGapsCompleted()) {
+        showMessage("🏆✅ Richtig! Satz gelöst! Weiter zum nächsten Satz.", false);
+        nextBtn.style.background = "#4cbb17";
+      } else {
+        const next = gapsData.find(g => !g.completed);
+        if (next) showMessage(`✅ Richtig! Nächste Lücke: '${next.currentDisplay}' → benötigt '${next.requiredLetter}'`, false);
+      }
+    });
+  }
+
+  function generateRiverLetters() {
+    const cards = [];
+    for (let gap of gapsData) {
+      if (!gap.completed) {
+        const required = gap.requiredLetter;
+        cards.push(required);
+        const opposite = required === required.toUpperCase() ? required.toLowerCase() : required.toUpperCase();
+        cards.push(opposite);
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß";
+        let randomOther = alphabet[Math.floor(Math.random() * alphabet.length)];
+        cards.push(randomOther);
+      }
+    }
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    return cards.slice(0, 20);
+  }
+
+  function startRiver(cardsArray) {
+    riverContainer.innerHTML = '';
+    floatingElements = [];
+    const tracks = [15, 55, 95, 135, 175];
+    cardsArray.forEach((cardText, idx) => {
+      const card = document.createElement('div');
+      card.className = 'floating-card';
+      card.innerText = cardText;
+      const track = tracks[idx % tracks.length];
+      const duration = 6 + Math.random() * 6;
+      const delay = Math.random() * 5;
+      card.style.top = track + 'px';
+      card.style.left = '100%';
+      card.style.animation = `slideRightToLeft ${duration}s linear ${delay}s infinite`;
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onFloatingCardClick(cardText, card);
+      });
+      riverContainer.appendChild(card);
+      floatingElements.push({ element: card, letter: cardText });
+    });
+  }
+
+  if (!document.querySelector('#riverAnim')) {
+    const style = document.createElement('style');
+    style.id = 'riverAnim';
+    style.textContent = `
+      @keyframes slideRightToLeft {
+        0% { transform: translateX(0); left: 100%; visibility: visible; }
+        100% { transform: translateX(-150%); left: 0%; visibility: visible; }
+      }
+      .floating-card {
+        position: absolute;
+        will-change: transform, left;
+        visibility: visible;
+      }
+      .letter-pool { position: relative; height: 100%; overflow: visible; }
+      .river { overflow-x: hidden; overflow-y: visible; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function goToNextSentence() {
+    if (floatingElements.length) {
+      floatingElements.forEach(f => f.element.remove());
+      floatingElements = [];
+    }
+    generateRandomSentence();
+    showMessage(`✨ Neuer zufälliger Satz!`, false);
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (!allGapsCompleted()) {
+      if (confirm("Du hast noch nicht alle Lücken gelöst. Trotzdem zum nächsten Satz? Fortschritt geht verloren.")) {
+        goToNextSentence();
+      }
+    } else {
+      goToNextSentence();
+    }
+  });
+</script>
+</body>
+</html>

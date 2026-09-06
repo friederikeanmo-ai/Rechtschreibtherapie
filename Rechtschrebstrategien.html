@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Strategien der deutschen Rechtschreibung – Stufenmodell</title>
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --bg-card: #ffffff;
+      --accent: #2a7ae2;
+      --accent-soft: #e3f0ff;
+      --text-main: #222222;
+      --text-muted: #555555;
+      --border-soft: #dddddd;
+      --heading-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --body-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2.5rem;
+      background: var(--bg);
+      font-family: var(--body-font);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--heading-font);
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-top: 2rem;
+      border-bottom: 2px solid var(--accent-soft);
+      padding-bottom: 0.3rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin-top: 1.4rem;
+    }
+
+    h4 {
+      font-size: 1.05rem;
+      margin-top: 1.1rem;
+      color: var(--text-main);
+    }
+
+    p {
+      margin: 0.2rem 0 0.6rem 0;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-header h3 {
+      margin: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .section-title {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    ul {
+      margin: 0.2rem 0 0.7rem 0;
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin: 0.15rem 0;
+    }
+
+    .example-block {
+      margin-top: 0.2rem;
+      padding: 0.5rem 0.8rem;
+      background: #fafafa;
+      border-radius: 6px;
+      border: 1px dashed #dddddd;
+      font-size: 0.9rem;
+    }
+
+    .strategy-name {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .mapping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .mapping-card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      padding: 1rem 1.1rem;
+      font-size: 0.9rem;
+    }
+
+    .mapping-card h4 {
+      margin-top: 0;
+      margin-bottom: 0.4rem;
+      color: var(--accent);
+    }
+
+    .mapping-card ul {
+      margin-top: 0.2rem;
+    }
+
+    .highlight {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.9rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .small {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header>
+      <h1>Strategien der deutschen Rechtschreibung</h1>
+      <p class="subtitle">
+        Übersicht nach dem Stufenmodell &amp; rechtschreibstrategische Aussagen für die lerntherapeutische Praxis.
+      </p>
+    </header>
+
+    <!-- Stufenmodell -->
+    <section>
+      <h2>1. Stufenmodell der Rechtschreibentwicklung</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Stufe 1</span>
+          <h3>Logographemische Stufe</h3>
+        </div>
+        <p class="section-title">Beschreibung</p>
+        <p>Kinder erkennen Wörter zunächst als „Ganzbilder“ (Logos, bekannte Schriftzüge), ohne systematische Laut-Buchstaben-Zuordnung.</p>
+
+        <p class="section-title">Aussagen für Material</p>
+        <ul>
+          <li>„Ich erkenne Wörter an ihrem Aussehen, wie ein Bild oder Logo.“</li>
+          <li>„Ich merke mir Wortbilder, ohne auf die einzelnen Laute zu achten.“</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Stufe 2</span>
+          <h3>Alphabetische Stufe</h3>
+        </div>
+        <p class="section-title">Beschreibung</p>
+        <p>Laute werden bewusst gehört und mit Buchstaben verschriftet. Die Schrift ist zunächst lauttreu („so wie ich spreche“).</p>
+
+        <p class="section-title">Aussagen für Material</p>
+        <ul>
+          <li>„Ich zerlege Wörter in Laute und schreibe zu jedem Laut einen Buchstaben.“</li>
+          <li>„Ich schreibe Wörter so, wie ich sie spreche.“</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Stufe 3</span>
+          <h3>Orthografische Stufe</h3>
+        </div>
+        <p class="section-title">Beschreibung</p>
+        <p>Kinder merken: Viele Wörter werden nicht genau so geschrieben, wie sie gesprochen werden. Silbenstruktur, Vokallänge, Rechtschreibmuster und Grammatik werden genutzt, ein orthografisches Lexikon entsteht.</p>
+
+        <p class="section-title">Aussagen für Material</p>
+        <ul>
+          <li>„Ich nutze Rechtschreibmuster und Regeln, nicht nur mein Gehör.“</li>
+          <li>„Ich beachte Silben, Vokallänge und Wortarten beim Schreiben.“</li>
+          <li>„Ich speichere mir richtige Schreibweisen als Wortbilder ab.“</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Stufe 4</span>
+          <h3>Automatisierte Stufe</h3>
+        </div>
+        <p class="section-title">Beschreibung</p>
+        <p>Rechtschreiben läuft weitgehend automatisch. Bei Unsicherheit werden Strategien bewusst eingesetzt, und die eigene Schreibweise wird reflektiert.</p>
+
+        <p class="section-title">Aussagen für Material</p>
+        <ul>
+          <li>„Ich schreibe viele Wörter automatisch richtig.“</li>
+          <li>„Bei schwierigen Wörtern nutze ich bewusst Rechtschreibstrategien.“</li>
+          <li>„Ich kontrolliere meine Schreibweise und verbessere Fehler gezielt.“</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Rechtschreibstrategien -->
+    <section>
+      <h2>2. Rechtschreibstrategien (für Karten &amp; Folien)</h2>
+
+      <!-- A. Lautanalytische Strategien -->
+      <div class="card">
+        <h3>A. Lautanalytische Strategien</h3>
+
+        <h4>1. Laut-Buchstaben-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich zerlege ein Wort in Laute und schreibe zu jedem Laut einen passenden Buchstaben.“</li>
+        </ul>
+
+        <h4>2. Silbenstrategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich zerlege Wörter in Silben, um sie besser schreiben zu können.“</li>
+          <li>„Ich erkenne offene Silben (enden auf einen Vokal) und geschlossene Silben (enden auf einen Mitlaut).“</li>
+        </ul>
+
+        <h4>3. Kurzvokal-/Langvokal-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich höre, ob ein Vokal kurz oder lang gesprochen wird.“</li>
+          <li>„Kurz gesprochener Vokal in einer geschlossenen Silbe → oft Doppelkonsonant.“</li>
+          <li>„Lang gesprochener Vokal in einer offenen Silbe → meist Einzelkonsonant.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          rennen (ren-nen) – ‚ren‘ geschlossen, e kurz → nn<br>
+          reden (re-den) – ‚re‘ offen, e lang → d
+        </div>
+      </div>
+
+      <!-- B. Silben- und Musterstrategien -->
+      <div class="card">
+        <h3>B. Silben- und Musterstrategien (Schärfung, Dehnung, ck/tz)</h3>
+
+        <h4>4. Doppelkonsonanten-Strategie (über Silbenstruktur)</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich prüfe: Ist die Silbe geschlossen und der Vokal kurz, schreibe ich einen Doppelkonsonanten.“</li>
+          <li>„Ist die Silbe offen und der Vokal lang, schreibe ich einen Einzelkonsonanten.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          rennen (ren-nen) – geschlossen + kurz → nn<br>
+          reden (re-den) – offen + lang → d
+        </div>
+
+        <h4>5. Dehnungsstrategien (lange Vokale sichtbar machen)</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich kenne typische Muster für lange Vokale (z. B. Dehnungs-h, Doppelvokal, bestimmte Endungen).“</li>
+          <li>„Ich weiß: Nicht jeder lange Vokal hat ein Dehnungs-h – ich verlasse mich auch auf gespeicherte Wortbilder.“</li>
+        </ul>
+
+        <h4>6. ck-Strategie (k nach kurzem Vokal)</h4>
+        <p class="strategy-name">Regel:</p>
+        <ul>
+          <li>„Nach kurzem Vokal schreibe ich den Laut /k/ <strong>immer</strong> mit ck – außer bei Eigennamen.“</li>
+          <li>„Nach l, n und r steht im Wortinneren <strong>nie</strong> ck, sondern <strong>immer</strong> nur k – außer bei Eigennamen.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          backen, Decke, Zucker, Rücken<br>
+          Bank (ank → k), Park (ark → k), Balken (alk → k)
+        </div>
+
+        <h4>7. tz-Strategie (z-Laut nach kurzem Vokal)</h4>
+        <p class="strategy-name">Regel:</p>
+        <ul>
+          <li>„Nach kurzem Vokal schreibe ich den Laut /ts/ im Wortinneren <strong>immer</strong> mit tz – außer bei Eigennamen.“</li>
+          <li>„Nach l, n und r steht im Wortinneren <strong>nie</strong> tz, sondern <strong>immer</strong> nur z – außer bei Eigennamen.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Katze, sitzen, Platz, Witz<br>
+          Salz (lz → z), Tanz (nz → z), Arzt (rz → z)
+        </div>
+      </div>
+
+      <!-- C. Wortbau-Strategien -->
+      <div class="card">
+        <h3>C. Wortbau-Strategien (morphologisch)</h3>
+
+        <h4>8. Wortfamilien-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich nutze verwandte Wörter, um den Wortstamm zu erkennen.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Baum – Bäume – Baumstamm<br>
+          Freund – Freundschaft – freundlich
+        </div>
+
+        <h4>9. Stamm- und Endungs-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich erkenne den Wortstamm und typische Endungen.“</li>
+        </ul>
+
+        <p class="section-title">Endungen für Großschreibung (Nomen)</p>
+        <ul>
+          <li>„Wörter mit den Endungen <strong>-heit, -keit, -ung, -nis, -tum, -schaft</strong> sind <strong>immer Nomen</strong> und werden <strong>immer groß</strong geschrieben.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Gesundheit, Freiheit, Schönheit<br>
+          Möglichkeit, Schnelligkeit, Höflichkeit<br>
+          Bewegung, Zeitung, Lösung<br>
+          Ergebnis, Zeugnis, Verständnis<br>
+          Eigentum, Reichtum, Altertum<br>
+          Freundschaft, Mannschaft, Wissenschaft
+        </div>
+
+        <p class="section-title">Endungen für Kleinschreibung (Adjektive)</p>
+        <ul>
+          <li>„Wörter mit den Endungen <strong>-ig, -lich, -isch, -sam, -bar, -los, -haft</strong> sind Adjektive und werden klein geschrieben (außer am Satzanfang und bei Nominalisierungen).“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          lustig, mutig, wichtig<br>
+          freundlich, deutlich, möglich<br>
+          menschlich, kindisch, sportlich<br>
+          langsam, einsam, wirksam<br>
+          sichtbar, essbar, machbar<br>
+          hilflos, sprachlos, sinnlos<br>
+          ehrenhaft, heldenhaft
+        </div>
+      </div>
+
+      <!-- D. Grammatische Strategien -->
+      <div class="card">
+        <h3>D. Grammatische Strategien</h3>
+
+        <h4>10. Großschreibungs-Strategie (Nominalisierung)</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich schreibe Nomen groß.“</li>
+          <li>„Ich erkenne Nominalisierungen und schreibe sie groß (z. B. das Lesen, das Gute).“</li>
+          <li>„Ich nutze Satzproben, um zu prüfen, ob ein Wort wie ein Nomen verwendet wird.“</li>
+        </ul>
+
+        <h4>11. Verbformen-/Grundform-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich suche die Grundform eines Verbs, um die richtige Schreibweise zu finden.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          lief → laufen<br>
+          fuhr → fahren<br>
+          sprach → sprechen
+        </div>
+
+        <h4>12. s / ss / ß-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Nach kurzem Vokal schreibe ich meist ss (Masse, Wasser, lassen).“</li>
+          <li>„Nach langem Vokal oder Diphthong schreibe ich oft ß (Maß, Fleiß, groß).“</li>
+          <li>„Am Wortanfang und zwischen Vokalen steht meist einfaches s (Sonne, Hase).“</li>
+        </ul>
+
+        <h4>13. Verwechslungswörter-Strategie (seit/seid, das/dass, wieder/wider)</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich unterscheide gleich klingende Wörter über Bedeutung und Wortart, nicht nur über das Gehör.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>seit / seid:</strong><br>
+          „seit“ mit t → Zeit (seit gestern, seit einer Woche).<br>
+          „seid“ mit d → sein (ihr seid, seid ihr fertig?).<br>
+          Probe: ihr seid laut → ihr wart laut.<br><br>
+
+          <strong>wieder / wider:</strong><br>
+          „wieder“ mit ie → erneut, noch einmal (wiederholen, wiederkommen).<br>
+          „wider“ mit i → gegen (wider Willen, widerstehen, widersprechen).<br><br>
+
+          <strong>das / dass:</strong><br>
+          „das“ mit einem s → Artikel/Pronomen (das Haus, das Kind).<br>
+          Probe: ersetzbar durch dieses/jenes/welches.<br>
+          „dass“ mit ss → Konjunktion (Ich glaube, dass du kommst.).
+        </div>
+
+        <h4>14. Auslautverhärtungs-Strategie (d/t, g/k, b/p)</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Am Wortende werden d, g und b oft wie t, k und p gesprochen.“</li>
+          <li>„Ich schreibe nach der Grundform und nicht so, wie ich es am Wortende höre.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Rad (gesprochen „Rat“) → Räder / Rad<br>
+          Tag (gesprochen „Tak“) → Tage<br>
+          Lob (gesprochen „Lop“) → Lob / Loben
+        </div>
+
+        <h4>15. Getrennt- und Zusammenschreibung</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich prüfe, ob eine Wortverbindung eine eigene Bedeutung hat.“</li>
+          <li>„Ich entscheide, ob ich getrennt oder zusammen schreibe (Rad fahren / radfahren, kennen lernen / kennenlernen).“</li>
+        </ul>
+      </div>
+
+      <!-- E. Allgemeine orthografische Strategien -->
+      <div class="card">
+        <h3>E. Allgemeine orthografische Strategien</h3>
+
+        <h4>16. Worttrennungs-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich trenne Wörter am Zeilenende nach Silben.“</li>
+          <li>„Ich nutze Silben, um Worttrennung zu üben und verständlich zu machen.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Lam-pe, Kin-der, Fah-ren
+        </div>
+
+        <h4>17. Fremdwort-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich merke mir häufige Fremdwörter als Ganzwörter.“</li>
+          <li>„Ich erkenne typische Fremdwortmuster wie ph, th, y.“</li>
+        </ul>
+        <div class="example-block">
+          <strong>Beispiele:</strong><br>
+          Telefon, Physik, Rhythmus
+        </div>
+      </div>
+
+      <!-- F. Kontroll- und Metastrategien -->
+      <div class="card">
+        <h3>F. Kontroll- und Metastrategien</h3>
+
+        <h4>18. Selbstkontrolle-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich lese meinen Text bewusst mit Rechtschreibblick.“</li>
+          <li>„Ich markiere unsichere Wörter und überprüfe sie gezielt.“</li>
+        </ul>
+
+        <h4>19. Wort-für-Wort-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich schaue mir jedes Wort einzeln an, statt nur flüssig zu lesen.“</li>
+          <li>„Ich prüfe besonders bekannte Stolperstellen (das/dass, s/ss/ß, Doppelkonsonanten).“</li>
+        </ul>
+
+        <h4>20. Hilfsmittel-Strategie</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich nutze Wörterbuch, Rechtschreibprogramme und Merkwörterlisten.“</li>
+          <li>„Ich baue mir Merkwörterlisten (z. B. vielleicht, seit/seid, dass).“</li>
+        </ul>
+
+        <h4>21. Strategie-Bewusstheit</h4>
+        <p class="strategy-name">Kern:</p>
+        <ul>
+          <li>„Ich überlege aktiv: Welche Strategie hilft mir bei diesem Wort?“</li>
+          <li>„Brauche ich Silbenwissen, Vokallänge, eine Regel oder eine Wortfamilie?“</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Mapping -->
+    <section>
+      <h2>3. Verknüpfung Dem-Stufenmodell ⇄ Strategien</h2>
+      <div class="highlight">
+        <strong>Hinweis für die Praxis:</strong><br>
+        Die Strategien bauen entlang der Stufen auf. Frühe Laut-/Silbenkompetenz wird in der orthografischen Stufe zu regelgeleiteten Schreibentscheidungen, später kommen Kontrolle und Strategiewahl hinzu.
+      </div>
+
+      <div class="mapping-grid">
+        <div class="mapping-card">
+          <h4>Stufe 1 – Logographemisch</h4>
+          <ul>
+            <li>Ganzwort-/Wortbild-Strategie</li>
+          </ul>
+        </div>
+
+        <div class="mapping-card">
+          <h4>Stufe 2 – Alphabetisch</h4>
+          <ul>
+            <li>Laut-Buchstaben-Strategie</li>
+            <li>Silbenstrategie (erste Schritte)</li>
+            <li>Kurzvokal-/Langvokal hören</li>
+          </ul>
+        </div>
+
+        <div class="mapping-card">
+          <h4>Stufe 3 – Orthografisch</h4>
+          <ul>
+            <li>Doppelkonsonanten-Strategie über Silbenstruktur &amp; Vokallänge</li>
+            <li>Dehnungsstrategien, ck-/tz-Strategie (inkl. l/n/r-Regel)</li>
+            <li>Wortfamilien-Strategie, Stamm- und Endungs-Strategie</li>
+            <li>Großschreibung (Nomen, Nominalisierung)</li>
+            <li>Verbformen-/Grundform-Strategie</li>
+            <li>s/ss/ß-Strategie</li>
+            <li>Verwechslungswörter (seit/seid, das/dass, wieder/wider)</li>
+            <li>Auslautverhärtungs-Strategie</li>
+            <li>Getrennt- und Zusammenschreibung</li>
+          </ul>
+        </div>
+
+        <div class="mapping-card">
+          <h4>Stufe 4 – Automatisiert</h4>
+          <ul>
+            <li>Selbstkontrolle-Strategie</li>
+            <li>Wort-für-Wort-Strategie</li>
+            <li>Hilfsmittel-Strategie</li>
+            <li>Strategie-Bewusstheit (gezielte Strategiewahl)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:1rem;">
+        Diese HTML-Struktur ist bewusst klar gehalten, damit du einzelne Karten/Blöcke leicht in andere Formate (Präsentationen, Arbeitsblätter, Handouts) übertragen kannst.
+      </p>
+    </section>
+  </div>
+</body>
+</html>
